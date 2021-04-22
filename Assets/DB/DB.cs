@@ -42,9 +42,9 @@ public class SerializeGameItems
 [System.Serializable]
 public class GameItems
 {
-    public bool[] gunArray = new bool[3];
-    public bool[] cardArray = new bool[3];
-    public int[] enemyArray = new int[3];
+    public bool[] gunArray = new bool[5];
+    public bool[] cardArray = new bool[5];
+    public int[] enemyArray = new int[5];
 }
 
 
