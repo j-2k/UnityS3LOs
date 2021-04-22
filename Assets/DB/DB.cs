@@ -6,6 +6,12 @@ using UnityEngine.Networking;
 
 
 [System.Serializable]
+public class UserData
+{
+    public DeserializeUserInformation[] arrayResult;
+}
+
+[System.Serializable]
 public class SerializeUserInformation
 {
     public string username;
@@ -13,24 +19,34 @@ public class SerializeUserInformation
 }
 
 [System.Serializable]
-public class DeserializeTest
+public class DeserializeUserInformation
 {
     public string username;
     public string emailID;
     public int userPassword;
-
-    public bool[] gunArray;
-    public bool[] cardArray;
-    public int[] enemyArray;
-
-    
 }
 
 [System.Serializable]
-public class Data
+public class IngameData
 {
-    public DeserializeTest[] arrayResult;
+    public SerializeGameItems[] arrayResult;
 }
+
+[System.Serializable]
+public class SerializeGameItems
+{
+    public string username;
+    public GameItems gameItems;
+}
+
+[System.Serializable]
+public class GameItems
+{
+    public bool[] gunArray = new bool[3];
+    public bool[] cardArray = new bool[3];
+    public int[] enemyArray = new int[3];
+}
+
 
 public class DB : MonoBehaviour
 {
@@ -53,7 +69,7 @@ public class DB : MonoBehaviour
         //SetUserInformationFromUsername(herokuSetReq, "juma",8057);
 
         //GetUserGameInfoFromUsername(getReqIG,"juma");
-        //SetUserGameInfoFromUsername(setReqIG, "juma");
+        //SetUserGameInfoFromUsername(setReqIG, "juma",0);
     }
 
     // Update is called once per frame
@@ -84,12 +100,44 @@ public class DB : MonoBehaviour
         StartCoroutine(GetPostRequestIG(url, JsonUtility.ToJson(userInfo)));
     }
 
-    void SetUserGameInfoFromUsername(string url, string usernameString) //3rd param is the array to set
+    void SetUserGameInfoFromUsername(string url, string usernameString, int arrayIndex) //3rd param is the array to set
     {
-        SerializeUserInformation userInfo = new SerializeUserInformation();
-        userInfo.username = usernameString;
-        //userInfo.userPassword = password;
-        StartCoroutine(SetPostRequestIG(url, JsonUtility.ToJson(userInfo)));
+        GameItems playerItems = new GameItems();
+        playerItems.gunArray[arrayIndex] = true;
+        playerItems.cardArray[arrayIndex] = true;
+        playerItems.enemyArray[arrayIndex] = 423453245;
+        SerializeGameItems gameItemsInfo = new SerializeGameItems();
+        gameItemsInfo.username = usernameString;
+        gameItemsInfo.gameItems = playerItems;
+        StartCoroutine(SetPostRequestIG(url, JsonUtility.ToJson(gameItemsInfo)));
+        /*
+        GameItems newGItems = new GameItems();
+        gameItemsInfo.gameItems = newGItems;
+        newGItems.gunArray[arrayIndex] = false;
+        newGItems.cardArray[arrayIndex] = false;
+        newGItems.enemyArray[arrayIndex] = 999;
+        */
+
+
+
+        /*
+        gameItemsInfo.gameItems.gunArray[arrayIndex] = false;
+        gameItemsInfo.gameItems.cardArray[arrayIndex] = false;
+        gameItemsInfo.gameItems.enemyArray[arrayIndex] = 999;
+        /*
+        GameItems gameItemsNew = new GameItems();
+        gameItemsNew.gunArray[arrayIndex] = false;
+        gameItemsNew.cardArray[arrayIndex] = false;
+        gameItemsNew.enemyArray[arrayIndex] = 999;
+        /*
+
+        /*
+        GameItems gItems = new GameItems();
+        gItems.gunArray[arrayIndex] = false;
+        gItems.cardArray[arrayIndex] = false;
+        gItems.enemyArray[arrayIndex] = 999;
+        */
+        //StartCoroutine(SetPostRequestIG(url, JsonUtility.ToJson(gameItemsNew)));
     }
 
     IEnumerator GetPostRequestUser(string url, string json)
@@ -110,7 +158,7 @@ public class DB : MonoBehaviour
         else
         {
             Debug.Log("Received: " + uwr.downloadHandler.text);
-            Data t = JsonUtility.FromJson<Data>(uwr.downloadHandler.text);
+            UserData t = JsonUtility.FromJson<UserData>(uwr.downloadHandler.text);
             Debug.Log(t.arrayResult[0].emailID + " " + t.arrayResult[0].username + " " + t.arrayResult[0].userPassword);
         }
     }
@@ -154,8 +202,8 @@ public class DB : MonoBehaviour
         else
         {
             Debug.Log("Received: " + uwr.downloadHandler.text);
-            Data t = JsonUtility.FromJson<Data>(uwr.downloadHandler.text);
-            Debug.Log(t.arrayResult[0].gunArray[0] + " " + t.arrayResult[0].cardArray[0] + " " + t.arrayResult[0].enemyArray[0]);
+            IngameData t = JsonUtility.FromJson<IngameData>(uwr.downloadHandler.text);
+            Debug.Log(t.arrayResult[0].gameItems.cardArray[0] + " " + t.arrayResult[0].gameItems.gunArray[0] + " " + t.arrayResult[0].gameItems.enemyArray[0]);
         }
     }
 
