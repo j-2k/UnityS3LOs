@@ -69,7 +69,7 @@ public class DB : MonoBehaviour
         //SetUserInformationFromUsername(herokuSetReq, "juma",8057);
 
         //GetUserGameInfoFromUsername(getReqIG, "juma");
-        //SetUserGameInfoFromUsername(setReqIG, "juma",0);
+        //SetUserGameInfoFromUsername(herokuSetReqIG, "juma",0);
     }
 
     // Update is called once per frame
@@ -103,13 +103,15 @@ public class DB : MonoBehaviour
     void SetUserGameInfoFromUsername(string url, string usernameString, int arrayIndex) //3rd param is the array to set
     {
         GameItems playerItems = new GameItems();
-        playerItems.gunArray[arrayIndex] = false;
-        playerItems.cardArray[arrayIndex] = false;
+        playerItems.gunArray[arrayIndex] = true;
+        playerItems.cardArray[arrayIndex] = true;
         playerItems.enemyArray[arrayIndex] = 98986435;
         SerializeGameItems gameItemsInfo = new SerializeGameItems();
         gameItemsInfo.username = usernameString;
         gameItemsInfo.gameItems = playerItems;
         StartCoroutine(SetPostRequestIG(url, JsonUtility.ToJson(gameItemsInfo)));
+
+
         /*
         GameItems newGItems = new GameItems();
         gameItemsInfo.gameItems = newGItems;
