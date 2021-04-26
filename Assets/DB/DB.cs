@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 [System.Serializable]
 public class UserData
 {
-    public DeserializeUserInformation[] arrayResult;
+    public DeserializeUserInformation arrayResult;
 }
 
 [System.Serializable]
@@ -29,7 +29,7 @@ public class DeserializeUserInformation
 [System.Serializable]
 public class IngameData
 {
-    public SerializeGameItems[] arrayResult;
+    public SerializeGameItems arrayResult;
 }
 
 [System.Serializable]
@@ -51,6 +51,7 @@ public class GameItems
 public class DB : MonoBehaviour
 {
     //usersInfo
+    string addReq = "http://localhost:3000/users/add";
     string setReq = "http://localhost:3000/users/set";
     string getReq = "http://localhost:3000/users/get";
     string herokuSetReq = "https://plgb-db.herokuapp.com/users/set";
@@ -68,8 +69,10 @@ public class DB : MonoBehaviour
         //GetUserInformationFromUsername(herokuGetReq,"juma");
         //SetUserInformationFromUsername(herokuSetReq, "juma",8057);
 
-        //GetUserGameInfoFromUsername(getReqIG, "juma");
+        GetUserGameInfoFromUsername(herokuGetReqIG, "juma");
         //SetUserGameInfoFromUsername(herokuSetReqIG, "juma",0);
+
+
     }
 
     // Update is called once per frame
@@ -161,7 +164,7 @@ public class DB : MonoBehaviour
         {
             Debug.Log("Received: " + uwr.downloadHandler.text);
             UserData t = JsonUtility.FromJson<UserData>(uwr.downloadHandler.text);
-            Debug.Log(t.arrayResult[0].emailID + " " + t.arrayResult[0].username + " " + t.arrayResult[0].userPassword);
+            Debug.Log(t.arrayResult.emailID + " " + t.arrayResult.username + " " + t.arrayResult.userPassword);
         }
     }
 
@@ -205,7 +208,7 @@ public class DB : MonoBehaviour
         {
             Debug.Log("Received: " + uwr.downloadHandler.text);
             IngameData t = JsonUtility.FromJson<IngameData>(uwr.downloadHandler.text);
-            Debug.Log(t.arrayResult[0].gameItems.cardArray[0] + " " + t.arrayResult[0].gameItems.gunArray[0] + " " + t.arrayResult[0].gameItems.enemyArray[0]);
+            Debug.Log(t.arrayResult.gameItems.cardArray[0] + " " + t.arrayResult.gameItems.gunArray[0] + " " + t.arrayResult.gameItems.enemyArray[0]);
         }
     }
 
