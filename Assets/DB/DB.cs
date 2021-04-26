@@ -36,6 +36,16 @@ public class IngameData
 public class SerializeGameItems
 {
     public string username;
+    public bool[] gunArray = new bool[5];
+    public bool[] cardArray = new bool[5];
+    public int[] enemyArray = new int[5];
+}
+
+/*
+[System.Serializable]
+public class SerializeGameItems
+{
+    public string username;
     public GameItems gameItems;
 }
 
@@ -46,6 +56,7 @@ public class GameItems
     public bool[] cardArray = new bool[5];
     public int[] enemyArray = new int[5];
 }
+*/
 
 
 public class DB : MonoBehaviour
@@ -69,10 +80,8 @@ public class DB : MonoBehaviour
         //GetUserInformationFromUsername(herokuGetReq,"juma");
         //SetUserInformationFromUsername(herokuSetReq, "juma",8057);
 
-        GetUserGameInfoFromUsername(herokuGetReqIG, "juma");
+        GetUserGameInfoFromUsername(getReqIG, "ziad");
         //SetUserGameInfoFromUsername(herokuSetReqIG, "juma",0);
-
-
     }
 
     // Update is called once per frame
@@ -98,12 +107,22 @@ public class DB : MonoBehaviour
 
     void GetUserGameInfoFromUsername(string url, string usernameString)
     {
-        SerializeUserInformation userInfo = new SerializeUserInformation();
+        SerializeGameItems userInfo = new SerializeGameItems();
         userInfo.username = usernameString;
         StartCoroutine(GetPostRequestIG(url, JsonUtility.ToJson(userInfo)));
     }
 
     void SetUserGameInfoFromUsername(string url, string usernameString, int arrayIndex) //3rd param is the array to set
+    {
+        SerializeGameItems gameItemsInfo = new SerializeGameItems();
+        gameItemsInfo.username = usernameString;
+        gameItemsInfo.gunArray[arrayIndex] = true;
+        gameItemsInfo.cardArray[arrayIndex] = false;
+        gameItemsInfo.enemyArray[arrayIndex] = 999;
+        StartCoroutine(SetPostRequestIG(url, JsonUtility.ToJson(gameItemsInfo)));
+    }
+
+    /*void SetUserGameInfoFromUsername(string url, string usernameString, int arrayIndex) //3rd param is the array to set
     {
         GameItems playerItems = new GameItems();
         playerItems.gunArray[arrayIndex] = true;
@@ -113,37 +132,7 @@ public class DB : MonoBehaviour
         gameItemsInfo.username = usernameString;
         gameItemsInfo.gameItems = playerItems;
         StartCoroutine(SetPostRequestIG(url, JsonUtility.ToJson(gameItemsInfo)));
-
-
-        /*
-        GameItems newGItems = new GameItems();
-        gameItemsInfo.gameItems = newGItems;
-        newGItems.gunArray[arrayIndex] = false;
-        newGItems.cardArray[arrayIndex] = false;
-        newGItems.enemyArray[arrayIndex] = 999;
-        */
-
-
-
-        /*
-        gameItemsInfo.gameItems.gunArray[arrayIndex] = false;
-        gameItemsInfo.gameItems.cardArray[arrayIndex] = false;
-        gameItemsInfo.gameItems.enemyArray[arrayIndex] = 999;
-        /*
-        GameItems gameItemsNew = new GameItems();
-        gameItemsNew.gunArray[arrayIndex] = false;
-        gameItemsNew.cardArray[arrayIndex] = false;
-        gameItemsNew.enemyArray[arrayIndex] = 999;
-        /*
-
-        /*
-        GameItems gItems = new GameItems();
-        gItems.gunArray[arrayIndex] = false;
-        gItems.cardArray[arrayIndex] = false;
-        gItems.enemyArray[arrayIndex] = 999;
-        */
-        //StartCoroutine(SetPostRequestIG(url, JsonUtility.ToJson(gameItemsNew)));
-    }
+    }*/
 
     IEnumerator GetPostRequestUser(string url, string json)
     {
@@ -207,8 +196,10 @@ public class DB : MonoBehaviour
         else
         {
             Debug.Log("Received: " + uwr.downloadHandler.text);
-            IngameData t = JsonUtility.FromJson<IngameData>(uwr.downloadHandler.text);
-            Debug.Log(t.arrayResult.gameItems.cardArray[0] + " " + t.arrayResult.gameItems.gunArray[0] + " " + t.arrayResult.gameItems.enemyArray[0]);
+            //IngameData t = JsonUtility.FromJson<IngameData>(uwr.downloadHandler.text);
+            //Debug.Log(t.arrayResult.gameItems.cardArray[0] + " " + t.arrayResult.gameItems.gunArray[0] + " " + t.arrayResult.gameItems.enemyArray[0]);
+            SerializeGameItems t = JsonUtility.FromJson<SerializeGameItems>(uwr.downloadHandler.text);
+            Debug.Log(t.cardArray[0] + " " + t.gunArray[0] + " " + t.enemyArray[0]);
         }
     }
 
